@@ -10,10 +10,12 @@ knitr::opts_chunk$set(echo = TRUE)
 
 library(readxl)
 library(janitor)
+library(gt)
+library(reprex)
 library(tidyverse)
 ```
 
-```{r}
+```{r table, echo=FALSE}
 ## filter out the course name
 x <- read_excel("class_enrollment_summary_by_term_2.13.20.xlsx", skip = 3) %>%
 	clean_names() %>%
@@ -25,13 +27,16 @@ x %>%
   filter(`course_department` == "Government") %>%
 
 ## arrange them by descending total enrollment
-  arrange(desc(non_degree)) %>%
+  arrange(desc(total)) %>%
   
 ## Select the important info
   select(course_title, course_name, total, non_degree) %>%
 
 ## slice out the first five rows
-  slice(1:5)
+  slice(1:5) %>%
+  
+  gt() %>%
+    tab_header(title = "Top Five Government Classes", subtitle = "Source: https://registrar.fas.harvard.edu/faculty-staff/courses/enrollment")
 
 ```
 
